@@ -299,29 +299,41 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Toggle Sidebar
+  // Global flags
+  let isUsernameFilled = false;
+  let isItemSelected = false;
+  let isPaymentSelected = false;
+
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
   }
 
+  // Roblox ID input
+  document.getElementById('roblox-id').addEventListener('input', function () {
+    isUsernameFilled = this.value.trim() !== '';
+    updateBuyButtonState();
+  });
+
   // Select item for purchase
   function selectItem(card) {
-    let allItems = document.querySelectorAll('.item-card');
-    allItems.forEach(item => item.classList.remove('selected'));
+    document.querySelectorAll('.item-card').forEach(item => item.classList.remove('selected'));
     card.classList.add('selected');
-    enableBuyButton();
-  }
-
-  // Enable Buy Button
-  function enableBuyButton() {
-    document.getElementById('buyButton').disabled = false;
+    isItemSelected = true;
+    updateBuyButtonState();
   }
 
   // Select Payment Method
   function selectPayment(payment) {
-    let allPayments = document.querySelectorAll('.payment-method');
-    allPayments.forEach(p => p.classList.remove('selected'));
+    document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
     payment.classList.add('selected');
+    isPaymentSelected = true;
+    updateBuyButtonState();
+  }
+
+  // Update Buy Button State
+  function updateBuyButtonState() {
+    const buyButton = document.getElementById('buyButton');
+    buyButton.disabled = !(isUsernameFilled && isItemSelected && isPaymentSelected);
   }
 
   // Show Confirmation Modal
@@ -338,10 +350,19 @@
 
   // Confirm Purchase
   function confirmPurchase() {
-    window.location.href = "dl.html";
+    const gcashInput = document.getElementById('gcashNumber').value.trim();
+    const gcashPattern = /^09\d{9}$/;
 
-    
+    if (!gcashPattern.test(gcashInput)) {
+      alert('Please enter a valid 11-digit GCash number starting with 09');
+      return;
+    }
+
+    // Redirect if valid
+    window.location.href = "dl.html";
   }
+</script>
+
 </script>
 </body>
 </html>
