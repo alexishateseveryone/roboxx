@@ -1,391 +1,1084 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Robux Deals Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-      background-color: #2b343d;
-    }
-
-    nav {
-      background-color: #212529;
-      padding: 1rem;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    }
-
-    .sidebar-toggle {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      margin-right: 1rem;
-      z-index: 9999;
-    }
-
-    .navbar-brand {
-      font-size: 1.5rem;
-      color: #ffffff;
-      font-weight: bold;
-      margin-left: 10px;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -290px;
-      width: 250px;
-      height: 100%;
-      background-color: #343a40;
-      transition: left 0.3s ease;
-      z-index: 1050;
-      padding-top: 60px;
-      box-shadow: 1px 1px 10px rgb(38, 35, 41);
-      align-items: center;
-      justify-items: center;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar a:hover {
-      background-color: #28a745;
-    }
-
-    .btn-signin {
-      margin: 1rem;
-      border-radius: 25px;
-      width: 100px;
-    }
-
-    .content {
-      margin-left: 0;
-      transition: margin-left 0.3s ease;
-      padding: 2rem;
-    }
-
-    .robux-card {
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .robux-card:hover, .robux-card.selected {
-      transform: translateY(-5px);
-      box-shadow: 0 0 15px #28a745;
-    }
-
-    .robux-card img {
-      max-height: 120px;
-      object-fit: contain;
-    }
-
-    .home-bg-wrapper {
-      position: relative;
-      height: 250px;
-      overflow: hidden;
-      border-radius: 12px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .home-bg {
-      background: url('https://wallpapers.com/images/hd/cute-roblox-53j4ro34k8hdzufn.jpg') center/cover no-repeat;
-      filter: blur(2px);
-      height: 100%;
-      transition: 0.5s ease;
-    }
-
-    .home-bg-wrapper:hover .home-bg {
-      filter: blur(5px);
-    }
-
-    .home-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
-      color: white;
-      text-shadow: 2px 2px 7px black;
-      text-align: center;
-    }
-
-    .sidebar, .sidebar h4, .sidebar button,
-    #about, #about h2, #about p {
-      color: white !important;
-    }
-
-    .payment-method {
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: 0.2s ease, box-shadow 0.3s ease;
-    }
-
-    .payment-method.selected {
-      box-shadow: 0 0 15px #28a745 !important;
-      transform: scale(1.07);
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        left: -100%;
-        opacity: 0.90;
-      }
-
-      .sidebar.open {
-        left: 0;
-      }
-
-      .robux-card img {
-        max-height: 100px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-
-  
-
-<nav>
-  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-  <div class="navbar-brand">Robuxx Secret Shop</div>
-</nav>
-
-<div id="sidebar" class="sidebar">
-  <h6 style="margin: 30px;">Sign In for Bonus Sale</h6>
-  <button class="btn btn-success btn-signin" onclick="window.location.href='googletry.html'">Sign In</button>
-</div>
-
-<main class="content">
-  <section id="home">
-    <div class="home-bg-wrapper">
-      <div class="home-bg"></div>
-      <div class="home-text">
-        <h1 class="display-4 fw-bold">Limited Promo!</h1>
-        <p class="lead">Get discounted Robux instantly via GCash and Maya!</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="shop" class="py-5">
-    <div class="container">
-      <h2 class="fw-bold text-white mb-1">Shop</h2>
-      <p class="text-white">Put your Roblox ID correctly to avoid wasted payment!</p>
-      <div class="mb-4">
-        <input type="text" id="roblox-id" class="form-control" placeholder="Enter your Robux username ID" required/>
-      </div>
-      <div class="card p-4 shadow-lg">
-        <div class="row g-4">
-          <!-- All Item Cards -->
-          <div class="col-md-4">
-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
-              <div class="card-body">
-                <h5 class="card-title">400 Robux</h5>
-                <p class="text-success fw-bold">₱20 <del class="text-muted">₱250</del></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
-              <div class="card-body">
-                <h5 class="card-title">800 Robux</h5>
-                <p class="text-success fw-bold">₱40 <del class="text-muted">₱499</del></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
-              <div class="card-body">
-                <h5 class="card-title">1700 Robux</h5>
-                <p class="text-success fw-bold">₱150 <del class="text-muted">₱999</del></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
-              <div class="card-body">
-                <h5 class="card-title">3500 Robux</h5>
-                <p class="text-success fw-bold">₱400 <del class="text-muted">₱1599</del></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
-              <div class="card-body">
-                <h5 class="card-title">5000 Robux</h5>
-                <p class="text-success fw-bold">₱799 <del class="text-muted">₱1999</del></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Section -->
-        <div class="mt-4">
-          <h5>Select Payment Method</h5>
-          <div class="row">
-            <div class="col-6">
-              <div class="card p-3 text-center align-items-center shadow-lg payment-method" onclick="selectPayment(this)">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAbYoD9S35qaY7-31wIzn-v4HFrqGsPLg4Cg&s" alt="GCash" style="width: 50%;"/>
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="card p-3 text-center align-items-center shadow-lg payment-method" onclick="selectPayment(this)">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Maya_logo.svg/1024px-Maya_logo.svg.png" alt="Maya" style="width: 40%;"/>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Buy Button -->
-        <button class="btn btn-success btn-lg mt-4" id="buyButton" onclick="showConfirmationModal()" disabled>Buy Now</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="about" class="p-2 card-">
-    <div class="container">
-      <h2 class="mb-4">About Robuxx Secret Shop</h2>
-      <p>
-        Welcome to <strong>Robuxx Secret Shop</strong> — your trusted and affordable Robux supplier in the Philippines. Since day one, our mission has been simple: to provide fast, safe, and secure Robux transactions for Filipino gamers, without the hassle or scams.
-      </p>
-      <p>
-        We know how important your time and money is, so we've built a system that ensures smooth, instant, and legit delivery. Whether you're topping up for the next limited item drop or just boosting your in-game flex, we got you covered.
-      </p>
-      <p>
-        We accept direct payments via <strong>GCash</strong>, and your order will be processed within minutes after confirmation. Thousands of satisfied customers and growing — all 100% legit, no cap.
-      </p>
-      <h4 class="mt-4">🛡️ Certified Legit Seller</h4>
-      <p>
-        Robuxx Secret Shop is a recognized and community-trusted Robux reseller. While we're not affiliated with Roblox Corporation, we operate under fair-use resell policies and follow strict compliance to PH online selling guidelines.
-      </p>
-      <p>
-        <strong>Business License No:</strong> PH-ROB-0925-LEGIT<br>
-        <strong>Verified GCASH Seller ID:</strong> #113627<br>
-        <strong>DTI Registered:</strong> Robuxx Secret Shop — Sole Proprietorship, 2023<br>
-        <strong>Contact Email:</strong> support@robuxxsecretshop.ph
-      </p>
-      <p>
-        Our team is composed of passionate Roblox players, tech-savvy agents, and dedicated customer service reps ready to help you 24/7.
-      </p>
-      <h5 class="mt-4">Join the secret. Buy safe. Flex hard. Only at Robuxx Secret Shop.</h5>
-    </div>
-  </section>
-  
-
-  <!-- Confirmation Modal -->
-  <div class="modal" tabindex="-1" id="confirmationModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Confirm Payment</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h5 class="fw-bold">You are about to purchase <span id="robuxAmount"></span> Robux for <span id="amountPaid"></span>!</h5>
-          <div class="mb-3">
-            <label for="gcashNumber" class="form-label">Enter your GCash Number:</label>
-            <input type="text" id="gcashNumber" class="form-control" placeholder="0917-123-4567" required/>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" onclick="confirmPurchase()">Confirm Purchase</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- QR Download Section (Hidden initially) -->
-  <div class="mt-4 text-center" id="qrDownloadSection" style="display: none;">
-    <h4>Download Your QR Code</h4>
-    <a href="your-qr-code.png" download="robux-payment-qr.png">
-      <button class="btn btn-primary">Download QR</button>
-    </a>
-  </div>
-
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // Global flags
-  let isUsernameFilled = false;
-  let isItemSelected = false;
-  let isPaymentSelected = false;
-
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-  }
-
-  // Roblox ID input
-  document.getElementById('roblox-id').addEventListener('input', function () {
-    isUsernameFilled = this.value.trim() !== '';
-    updateBuyButtonState();
-  });
-
-  // Select item for purchase
-  function selectItem(card) {
-    document.querySelectorAll('.item-card').forEach(item => item.classList.remove('selected'));
-    card.classList.add('selected');
-    isItemSelected = true;
-    updateBuyButtonState();
-  }
-
-  // Select Payment Method
-  function selectPayment(payment) {
-    document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
-    payment.classList.add('selected');
-    isPaymentSelected = true;
-    updateBuyButtonState();
-  }
-
-  // Update Buy Button State
-  function updateBuyButtonState() {
-    const buyButton = document.getElementById('buyButton');
-    buyButton.disabled = !(isUsernameFilled && isItemSelected && isPaymentSelected);
-  }
-
-  // Show Confirmation Modal
-  function showConfirmationModal() {
-    const selectedItem = document.querySelector('.item-card.selected');
-    const robuxAmount = selectedItem ? selectedItem.querySelector('.card-title').innerText : 'Unknown';
-    const price = selectedItem ? selectedItem.querySelector('.text-success').innerText : '₱0';
-
-    document.getElementById('robuxAmount').innerText = robuxAmount;
-    document.getElementById('amountPaid').innerText = price;
-
-    new bootstrap.Modal(document.getElementById('confirmationModal')).show();
-  }
-
-  // Confirm Purchase
-  function confirmPurchase() {
-    const gcashInput = document.getElementById('gcashNumber').value.trim();
-    const gcashPattern = /^09\d{9}$/;
-
-    if (!gcashPattern.test(gcashInput)) {
-      alert('Please enter a valid 11-digit GCash number starting with 09');
-      return;
-    }
-
-    // Redirect if valid
-    window.location.href = "dl.html";
-  }
-</script>
-
-</script>
-</body>
-</html>
+diff --git a/index.html b/index.html
+index 39380202648c0911359c94a3bc9bcc557a6fcc2d..c2b6c912a9eb37868bae15fa053d7378e5f9224f 100644
+--- a/index.html
++++ b/index.html
+@@ -1,391 +1,687 @@
+-<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-  <meta charset="UTF-8" />
+-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+-  <title>Robux Deals Dashboard</title>
+-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+-  <style>
+-    body {
+-      margin: 0;
+-      font-family: Arial, sans-serif;
+-      overflow-x: hidden;
+-      background-color: #2b343d;
+-    }
+-
+-    nav {
+-      background-color: #212529;
+-      padding: 1rem;
+-      display: flex;
+-      justify-content: flex-start;
+-      align-items: center;
+-    }
+-
+-    .sidebar-toggle {
+-      background: none;
+-      border: none;
+-      color: white;
+-      font-size: 1.5rem;
+-      cursor: pointer;
+-      margin-right: 1rem;
+-      z-index: 9999;
+-    }
+-
+-    .navbar-brand {
+-      font-size: 1.5rem;
+-      color: #ffffff;
+-      font-weight: bold;
+-      margin-left: 10px;
+-    }
+-
+-    .sidebar {
+-      position: fixed;
+-      top: 0;
+-      left: -290px;
+-      width: 250px;
+-      height: 100%;
+-      background-color: #343a40;
+-      transition: left 0.3s ease;
+-      z-index: 1050;
+-      padding-top: 60px;
+-      box-shadow: 1px 1px 10px rgb(38, 35, 41);
+-      align-items: center;
+-      justify-items: center;
+-    }
+-
+-    .sidebar.open {
+-      left: 0;
+-    }
+-
+-    .sidebar a:hover {
+-      background-color: #28a745;
+-    }
+-
+-    .btn-signin {
+-      margin: 1rem;
+-      border-radius: 25px;
+-      width: 100px;
+-    }
+-
+-    .content {
+-      margin-left: 0;
+-      transition: margin-left 0.3s ease;
+-      padding: 2rem;
+-    }
+-
+-    .robux-card {
+-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+-      border-radius: 12px;
+-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+-    }
+-
+-    .robux-card:hover, .robux-card.selected {
+-      transform: translateY(-5px);
+-      box-shadow: 0 0 15px #28a745;
+-    }
+-
+-    .robux-card img {
+-      max-height: 120px;
+-      object-fit: contain;
+-    }
+-
+-    .home-bg-wrapper {
+-      position: relative;
+-      height: 250px;
+-      overflow: hidden;
+-      border-radius: 12px;
+-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+-    }
+-
+-    .home-bg {
+-      background: url('https://wallpapers.com/images/hd/cute-roblox-53j4ro34k8hdzufn.jpg') center/cover no-repeat;
+-      filter: blur(2px);
+-      height: 100%;
+-      transition: 0.5s ease;
+-    }
+-
+-    .home-bg-wrapper:hover .home-bg {
+-      filter: blur(5px);
+-    }
+-
+-    .home-text {
+-      position: absolute;
+-      top: 50%;
+-      left: 50%;
+-      transform: translate(-50%, -50%);
+-      z-index: 2;
+-      color: white;
+-      text-shadow: 2px 2px 7px black;
+-      text-align: center;
+-    }
+-
+-    .sidebar, .sidebar h4, .sidebar button,
+-    #about, #about h2, #about p {
+-      color: white !important;
+-    }
+-
+-    .payment-method {
+-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+-      transition: 0.2s ease, box-shadow 0.3s ease;
+-    }
+-
+-    .payment-method.selected {
+-      box-shadow: 0 0 15px #28a745 !important;
+-      transform: scale(1.07);
+-    }
+-
+-    @media (max-width: 768px) {
+-      .sidebar {
+-        width: 100%;
+-        left: -100%;
+-        opacity: 0.90;
+-      }
+-
+-      .sidebar.open {
+-        left: 0;
+-      }
+-
+-      .robux-card img {
+-        max-height: 100px;
+-      }
+-    }
+-  </style>
+-</head>
+-<body>
+-
+-
+-  
+-
+-<nav>
+-  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+-  <div class="navbar-brand">Robuxx Secret Shop</div>
+-</nav>
+-
+-<div id="sidebar" class="sidebar">
+-  <h6 style="margin: 30px;">Sign In for Bonus Sale</h6>
+-  <button class="btn btn-success btn-signin" onclick="window.location.href='googletry.html'">Sign In</button>
+-</div>
+-
+-<main class="content">
+-  <section id="home">
+-    <div class="home-bg-wrapper">
+-      <div class="home-bg"></div>
+-      <div class="home-text">
+-        <h1 class="display-4 fw-bold">Limited Promo!</h1>
+-        <p class="lead">Get discounted Robux instantly via GCash and Maya!</p>
+-      </div>
+-    </div>
+-  </section>
+-
+-  <section id="shop" class="py-5">
+-    <div class="container">
+-      <h2 class="fw-bold text-white mb-1">Shop</h2>
+-      <p class="text-white">Put your Roblox ID correctly to avoid wasted payment!</p>
+-      <div class="mb-4">
+-        <input type="text" id="roblox-id" class="form-control" placeholder="Enter your Robux username ID" required/>
+-      </div>
+-      <div class="card p-4 shadow-lg">
+-        <div class="row g-4">
+-          <!-- All Item Cards -->
+-          <div class="col-md-4">
+-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
+-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
+-              <div class="card-body">
+-                <h5 class="card-title">400 Robux</h5>
+-                <p class="text-success fw-bold">₱20 <del class="text-muted">₱250</del></p>
+-              </div>
+-            </div>
+-          </div>
+-          <div class="col-md-4">
+-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
+-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
+-              <div class="card-body">
+-                <h5 class="card-title">800 Robux</h5>
+-                <p class="text-success fw-bold">₱40 <del class="text-muted">₱499</del></p>
+-              </div>
+-            </div>
+-          </div>
+-          <div class="col-md-4">
+-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
+-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
+-              <div class="card-body">
+-                <h5 class="card-title">1700 Robux</h5>
+-                <p class="text-success fw-bold">₱150 <del class="text-muted">₱999</del></p>
+-              </div>
+-            </div>
+-          </div>
+-          <div class="col-md-4">
+-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
+-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
+-              <div class="card-body">
+-                <h5 class="card-title">3500 Robux</h5>
+-                <p class="text-success fw-bold">₱400 <del class="text-muted">₱1599</del></p>
+-              </div>
+-            </div>
+-          </div>
+-          <div class="col-md-4">
+-            <div class="card text-center robux-card item-card" onclick="selectItem(this)">
+-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="card-img-top p-3 mt-2">
+-              <div class="card-body">
+-                <h5 class="card-title">5000 Robux</h5>
+-                <p class="text-success fw-bold">₱799 <del class="text-muted">₱1999</del></p>
+-              </div>
+-            </div>
+-          </div>
+-        </div>
+-
+-        <!-- Payment Section -->
+-        <div class="mt-4">
+-          <h5>Select Payment Method</h5>
+-          <div class="row">
+-            <div class="col-6">
+-              <div class="card p-3 text-center align-items-center shadow-lg payment-method" onclick="selectPayment(this)">
+-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAbYoD9S35qaY7-31wIzn-v4HFrqGsPLg4Cg&s" alt="GCash" style="width: 50%;"/>
+-              </div>
+-            </div>
+-            <div class="col-6">
+-              <div class="card p-3 text-center align-items-center shadow-lg payment-method" onclick="selectPayment(this)">
+-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Maya_logo.svg/1024px-Maya_logo.svg.png" alt="Maya" style="width: 40%;"/>
+-              </div>
+-            </div>
+-          </div>
+-        </div>
+-
+-        <!-- Buy Button -->
+-        <button class="btn btn-success btn-lg mt-4" id="buyButton" onclick="showConfirmationModal()" disabled>Buy Now</button>
+-      </div>
+-    </div>
+-  </section>
+-
+-  <section id="about" class="p-2 card-">
+-    <div class="container">
+-      <h2 class="mb-4">About Robuxx Secret Shop</h2>
+-      <p>
+-        Welcome to <strong>Robuxx Secret Shop</strong> — your trusted and affordable Robux supplier in the Philippines. Since day one, our mission has been simple: to provide fast, safe, and secure Robux transactions for Filipino gamers, without the hassle or scams.
+-      </p>
+-      <p>
+-        We know how important your time and money is, so we've built a system that ensures smooth, instant, and legit delivery. Whether you're topping up for the next limited item drop or just boosting your in-game flex, we got you covered.
+-      </p>
+-      <p>
+-        We accept direct payments via <strong>GCash</strong>, and your order will be processed within minutes after confirmation. Thousands of satisfied customers and growing — all 100% legit, no cap.
+-      </p>
+-      <h4 class="mt-4">🛡️ Certified Legit Seller</h4>
+-      <p>
+-        Robuxx Secret Shop is a recognized and community-trusted Robux reseller. While we're not affiliated with Roblox Corporation, we operate under fair-use resell policies and follow strict compliance to PH online selling guidelines.
+-      </p>
+-      <p>
+-        <strong>Business License No:</strong> PH-ROB-0925-LEGIT<br>
+-        <strong>Verified GCASH Seller ID:</strong> #113627<br>
+-        <strong>DTI Registered:</strong> Robuxx Secret Shop — Sole Proprietorship, 2023<br>
+-        <strong>Contact Email:</strong> support@robuxxsecretshop.ph
+-      </p>
+-      <p>
+-        Our team is composed of passionate Roblox players, tech-savvy agents, and dedicated customer service reps ready to help you 24/7.
+-      </p>
+-      <h5 class="mt-4">Join the secret. Buy safe. Flex hard. Only at Robuxx Secret Shop.</h5>
+-    </div>
+-  </section>
+-  
+-
+-  <!-- Confirmation Modal -->
+-  <div class="modal" tabindex="-1" id="confirmationModal">
+-    <div class="modal-dialog">
+-      <div class="modal-content">
+-        <div class="modal-header">
+-          <h5 class="modal-title">Confirm Payment</h5>
+-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+-        </div>
+-        <div class="modal-body">
+-          <h5 class="fw-bold">You are about to purchase <span id="robuxAmount"></span> Robux for <span id="amountPaid"></span>!</h5>
+-          <div class="mb-3">
+-            <label for="gcashNumber" class="form-label">Enter your GCash Number:</label>
+-            <input type="text" id="gcashNumber" class="form-control" placeholder="0917-123-4567" required/>
+-          </div>
+-        </div>
+-        <div class="modal-footer">
+-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+-          <button type="button" class="btn btn-primary" onclick="confirmPurchase()">Confirm Purchase</button>
+-        </div>
+-      </div>
+-    </div>
+-  </div>
+-
+-  <!-- QR Download Section (Hidden initially) -->
+-  <div class="mt-4 text-center" id="qrDownloadSection" style="display: none;">
+-    <h4>Download Your QR Code</h4>
+-    <a href="your-qr-code.png" download="robux-payment-qr.png">
+-      <button class="btn btn-primary">Download QR</button>
+-    </a>
+-  </div>
+-
+-</main>
+-
+-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+-<script>
+-  // Global flags
+-  let isUsernameFilled = false;
+-  let isItemSelected = false;
+-  let isPaymentSelected = false;
+-
+-  function toggleSidebar() {
+-    document.getElementById('sidebar').classList.toggle('open');
+-  }
+-
+-  // Roblox ID input
+-  document.getElementById('roblox-id').addEventListener('input', function () {
+-    isUsernameFilled = this.value.trim() !== '';
+-    updateBuyButtonState();
+-  });
+-
+-  // Select item for purchase
+-  function selectItem(card) {
+-    document.querySelectorAll('.item-card').forEach(item => item.classList.remove('selected'));
+-    card.classList.add('selected');
+-    isItemSelected = true;
+-    updateBuyButtonState();
+-  }
+-
+-  // Select Payment Method
+-  function selectPayment(payment) {
+-    document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
+-    payment.classList.add('selected');
+-    isPaymentSelected = true;
+-    updateBuyButtonState();
+-  }
+-
+-  // Update Buy Button State
+-  function updateBuyButtonState() {
+-    const buyButton = document.getElementById('buyButton');
+-    buyButton.disabled = !(isUsernameFilled && isItemSelected && isPaymentSelected);
+-  }
+-
+-  // Show Confirmation Modal
+-  function showConfirmationModal() {
+-    const selectedItem = document.querySelector('.item-card.selected');
+-    const robuxAmount = selectedItem ? selectedItem.querySelector('.card-title').innerText : 'Unknown';
+-    const price = selectedItem ? selectedItem.querySelector('.text-success').innerText : '₱0';
+-
+-    document.getElementById('robuxAmount').innerText = robuxAmount;
+-    document.getElementById('amountPaid').innerText = price;
+-
+-    new bootstrap.Modal(document.getElementById('confirmationModal')).show();
+-  }
+-
+-  // Confirm Purchase
+-  function confirmPurchase() {
+-    const gcashInput = document.getElementById('gcashNumber').value.trim();
+-    const gcashPattern = /^09\d{9}$/;
+-
+-    if (!gcashPattern.test(gcashInput)) {
+-      alert('Please enter a valid 11-digit GCash number starting with 09');
+-      return;
+-    }
+-
+-    // Redirect if valid
+-    window.location.href = "dl.html";
+-  }
+-</script>
+-
+-</script>
+-</body>
+-</html>
++<!DOCTYPE html>
++<html lang="en">
++<head>
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Robuxx Secret Shop</title>
++  <link rel="preconnect" href="https://fonts.googleapis.com">
++  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
++  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
++  <style>
++    :root {
++      --bg-dark: #0f172a;
++      --bg-darker: #0b1120;
++      --card-dark: #111c34;
++      --accent: #38bdf8;
++      --accent-strong: #0ea5e9;
++      --success: #34d399;
++      --text-muted: rgba(255, 255, 255, 0.7);
++    }
++
++    * {
++      box-sizing: border-box;
++    }
++
++    body {
++      margin: 0;
++      font-family: 'Inter', sans-serif;
++      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 45%),
++        radial-gradient(circle at bottom right, rgba(52, 211, 153, 0.12), transparent 40%),
++        linear-gradient(135deg, var(--bg-dark), var(--bg-darker));
++      color: white;
++      min-height: 100vh;
++      overflow-x: hidden;
++    }
++
++    a {
++      text-decoration: none;
++    }
++
++    .top-nav {
++      background: rgba(12, 18, 34, 0.95);
++      backdrop-filter: blur(16px);
++      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
++      position: sticky;
++      top: 0;
++      z-index: 1100;
++    }
++
++    .top-nav .container {
++      padding: 0.9rem 1.5rem;
++    }
++
++    .sidebar-toggle {
++      background: rgba(56, 189, 248, 0.1);
++      border: 1px solid rgba(148, 163, 184, 0.3);
++      color: white;
++      font-size: 1.25rem;
++      width: 42px;
++      height: 42px;
++      border-radius: 12px;
++      display: inline-flex;
++      align-items: center;
++      justify-content: center;
++      cursor: pointer;
++      transition: background 0.2s ease;
++      margin-right: 1rem;
++    }
++
++    .sidebar-toggle:hover {
++      background: rgba(56, 189, 248, 0.2);
++    }
++
++    .brand {
++      font-weight: 700;
++      letter-spacing: 0.03em;
++      color: white;
++      font-size: 1.25rem;
++    }
++
++    .nav-actions a {
++      color: var(--text-muted);
++      font-weight: 500;
++      padding: 0.25rem 0.75rem;
++      transition: color 0.2s ease;
++    }
++
++    .nav-actions a:hover {
++      color: white;
++    }
++
++    .btn-gradient {
++      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
++      color: white !important;
++      border: none;
++      border-radius: 999px;
++      padding: 0.5rem 1.5rem;
++      font-weight: 600;
++      transition: transform 0.2s ease, box-shadow 0.2s ease;
++      box-shadow: 0 12px 30px rgba(14, 165, 233, 0.25);
++    }
++
++    .btn-gradient:hover {
++      transform: translateY(-2px);
++      box-shadow: 0 18px 40px rgba(14, 165, 233, 0.35);
++    }
++
++    .btn-outline-light {
++      border-radius: 999px;
++      border-width: 2px;
++      font-weight: 600;
++      padding: 0.5rem 1.5rem;
++    }
++
++    .sidebar {
++      position: fixed;
++      top: 0;
++      left: -320px;
++      width: 280px;
++      height: 100%;
++      background: rgba(15, 23, 42, 0.95);
++      backdrop-filter: blur(18px);
++      transition: left 0.3s ease;
++      z-index: 1050;
++      padding: 80px 1.5rem 2rem;
++      box-shadow: 0 0 35px rgba(15, 23, 42, 0.55);
++    }
++
++    .sidebar.open {
++      left: 0;
++    }
++
++    .sidebar h6 {
++      color: white;
++      font-weight: 600;
++      margin-bottom: 1.25rem;
++    }
++
++    .sidebar .btn {
++      width: 100%;
++      border-radius: 12px;
++      font-weight: 600;
++    }
++
++    main {
++      padding-bottom: 5rem;
++    }
++
++    section {
++      position: relative;
++      padding: 4.5rem 0;
++    }
++
++    .hero {
++      min-height: 70vh;
++      display: flex;
++      align-items: center;
++      justify-content: center;
++      text-align: left;
++      overflow: hidden;
++    }
++
++    .hero::before {
++      content: '';
++      position: absolute;
++      inset: 0;
++      background: url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92eee?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
++      opacity: 0.28;
++      filter: saturate(1.3);
++    }
++
++    .hero-overlay {
++      position: absolute;
++      inset: 0;
++      background: linear-gradient(135deg, rgba(14, 116, 144, 0.65), rgba(15, 23, 42, 0.8));
++    }
++
++    .hero-content {
++      position: relative;
++      z-index: 2;
++      max-width: 620px;
++    }
++
++    .hero-eyebrow {
++      text-transform: uppercase;
++      letter-spacing: 0.2em;
++      font-size: 0.75rem;
++      font-weight: 600;
++      color: rgba(255, 255, 255, 0.65);
++    }
++
++    .hero h1 {
++      font-size: clamp(2.5rem, 5vw, 3.8rem);
++      font-weight: 700;
++      margin: 1rem 0 1.5rem;
++      line-height: 1.15;
++    }
++
++    .hero p {
++      color: rgba(226, 232, 240, 0.85);
++      font-size: 1.125rem;
++      line-height: 1.7;
++      margin-bottom: 1.75rem;
++    }
++
++    .section-title {
++      font-weight: 700;
++      margin-bottom: 0.75rem;
++    }
++
++    .section-subtitle {
++      color: rgba(226, 232, 240, 0.75);
++      margin-bottom: 2rem;
++      max-width: 620px;
++    }
++
++    .metrics-card {
++      border-radius: 18px;
++      background: rgba(15, 23, 42, 0.65);
++      border: 1px solid rgba(148, 163, 184, 0.2);
++      padding: 2rem 1.5rem;
++      height: 100%;
++      box-shadow: 0 16px 45px rgba(15, 23, 42, 0.35);
++    }
++
++    .metrics-card h3 {
++      font-size: 2rem;
++      font-weight: 700;
++      margin-bottom: 0.5rem;
++      color: white;
++    }
++
++    .metrics-card p {
++      color: rgba(226, 232, 240, 0.65);
++      margin: 0;
++    }
++
++    .card-elevated {
++      background: rgba(15, 23, 42, 0.75);
++      border: 1px solid rgba(148, 163, 184, 0.18);
++      border-radius: 18px;
++      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
++      padding: 2rem;
++    }
++
++    .input-group-custom input {
++      border-radius: 14px;
++      padding: 0.85rem 1rem;
++      background: rgba(15, 23, 42, 0.55);
++      border: 1px solid rgba(148, 163, 184, 0.35);
++      color: white;
++    }
++
++    .input-group-custom input::placeholder {
++      color: rgba(148, 163, 184, 0.75);
++    }
++
++    .input-group-custom input:focus {
++      box-shadow: 0 0 0 0.25rem rgba(14, 165, 233, 0.25);
++      border-color: rgba(56, 189, 248, 0.9);
++    }
++
++    .item-card {
++      background: rgba(15, 23, 42, 0.7);
++      border: 1px solid transparent;
++      border-radius: 16px;
++      transition: transform 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
++      padding: 1.5rem 1.25rem;
++      height: 100%;
++    }
++
++    .item-card img {
++      max-height: 90px;
++      object-fit: contain;
++      margin-bottom: 1rem;
++    }
++
++    .item-card:hover,
++    .item-card.selected {
++      transform: translateY(-6px);
++      border-color: rgba(56, 189, 248, 0.7);
++      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.45);
++    }
++
++    .item-card h5 {
++      font-weight: 600;
++      color: white;
++    }
++
++    .price-tag {
++      font-size: 1.25rem;
++      font-weight: 700;
++      color: var(--success);
++    }
++
++    .price-tag span {
++      font-size: 0.9rem;
++      font-weight: 500;
++      color: rgba(248, 250, 252, 0.55);
++      margin-left: 0.5rem;
++      text-decoration: line-through;
++    }
++
++    .payment-method {
++      background: rgba(15, 23, 42, 0.6);
++      border: 1px solid transparent;
++      border-radius: 16px;
++      padding: 1.5rem;
++      transition: transform 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
++      height: 100%;
++    }
++
++    .payment-method img {
++      width: 60%;
++      max-width: 140px;
++      filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.45));
++    }
++
++    .payment-method:hover,
++    .payment-method.selected {
++      transform: translateY(-6px);
++      border-color: rgba(52, 211, 153, 0.85);
++      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.4);
++    }
++
++    .feature-card {
++      background: rgba(15, 23, 42, 0.65);
++      border-radius: 18px;
++      padding: 2rem;
++      height: 100%;
++      border: 1px solid rgba(148, 163, 184, 0.18);
++      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
++    }
++
++    .feature-card h5 {
++      font-weight: 600;
++      margin-bottom: 0.75rem;
++    }
++
++    .feature-card p {
++      color: rgba(226, 232, 240, 0.7);
++    }
++
++    #about {
++      background: rgba(15, 23, 42, 0.6);
++      border-top: 1px solid rgba(148, 163, 184, 0.15);
++      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
++    }
++
++    #about strong {
++      color: white;
++    }
++
++    footer {
++      border-top: 1px solid rgba(148, 163, 184, 0.2);
++      padding: 2.5rem 0;
++      text-align: center;
++      color: rgba(226, 232, 240, 0.6);
++      background: rgba(10, 16, 28, 0.85);
++    }
++
++    @media (max-width: 992px) {
++      .nav-actions {
++        display: none !important;
++      }
++    }
++
++    @media (max-width: 768px) {
++      .sidebar {
++        width: 100%;
++        left: -100%;
++      }
++
++      .sidebar.open {
++        left: 0;
++      }
++
++      .hero {
++        min-height: 60vh;
++      }
++
++      .item-card,
++      .payment-method {
++        padding: 1.25rem;
++      }
++    }
++  </style>
++</head>
++<body>
++  <nav class="top-nav">
++    <div class="container d-flex align-items-center">
++      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
++      <a class="brand" href="#home">Robuxx Secret Shop</a>
++      <div class="ms-auto d-flex align-items-center gap-3 nav-actions">
++        <a href="#shop">Shop</a>
++        <a href="#about">About</a>
++        <a class="btn btn-gradient" href="googletry.html">Sign In</a>
++      </div>
++    </div>
++  </nav>
++
++  <div id="sidebar" class="sidebar">
++    <h6>Unlock bonus-only drops when you sign in.</h6>
++    <button class="btn btn-gradient" onclick="window.location.href='googletry.html'">Sign In with Google</button>
++  </div>
++
++  <main>
++    <section class="hero" id="home">
++      <div class="hero-overlay"></div>
++      <div class="container hero-content">
++        <span class="hero-eyebrow">Premium Roblox top-ups</span>
++        <h1>Top up Robux instantly with a trusted Philippine seller.</h1>
++        <p>Get exclusive bundles, fast delivery, and dedicated support from agents who know Roblox by heart. Secure transactions through GCash and Maya, 24/7.</p>
++        <div class="d-flex flex-wrap gap-3">
++          <a class="btn btn-gradient btn-lg" href="#shop">Browse bundles</a>
++          <a class="btn btn-outline-light btn-lg" href="#about">Why choose us</a>
++        </div>
++      </div>
++    </section>
++
++    <section class="py-5">
++      <div class="container">
++        <div class="row g-4 text-center">
++          <div class="col-6 col-lg-3">
++            <div class="metrics-card">
++              <h3>10K+</h3>
++              <p>Completed payouts</p>
++            </div>
++          </div>
++          <div class="col-6 col-lg-3">
++            <div class="metrics-card">
++              <h3>4.9★</h3>
++              <p>Average customer rating</p>
++            </div>
++          </div>
++          <div class="col-6 col-lg-3">
++            <div class="metrics-card">
++              <h3>&lt;5 min</h3>
++              <p>Average delivery time</p>
++            </div>
++          </div>
++          <div class="col-6 col-lg-3">
++            <div class="metrics-card">
++              <h3>24/7</h3>
++              <p>Live agent support</p>
++            </div>
++          </div>
++        </div>
++      </div>
++    </section>
++
++    <section id="shop" class="py-5">
++      <div class="container">
++        <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3 mb-4">
++          <div>
++            <h2 class="section-title">Choose your Robux bundle</h2>
++            <p class="section-subtitle">Enter your Roblox username correctly so we can deliver your Robux without delay.</p>
++          </div>
++        </div>
++
++        <div class="card-elevated mb-4">
++          <div class="input-group-custom mb-4">
++            <input type="text" id="roblox-id" class="form-control" placeholder="Enter your Roblox username or ID" required />
++          </div>
++
++          <div class="row g-4">
++            <div class="col-md-4">
++              <div class="item-card text-center h-100" onclick="selectItem(this)" data-robux="400" data-price="₱20">
++                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="img-fluid" alt="400 Robux bundle" />
++                <h5>400 Robux</h5>
++                <div class="price-tag">₱20<span>₱250</span></div>
++              </div>
++            </div>
++            <div class="col-md-4">
++              <div class="item-card text-center h-100" onclick="selectItem(this)" data-robux="800" data-price="₱40">
++                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="img-fluid" alt="800 Robux bundle" />
++                <h5>800 Robux</h5>
++                <div class="price-tag">₱40<span>₱499</span></div>
++              </div>
++            </div>
++            <div class="col-md-4">
++              <div class="item-card text-center h-100" onclick="selectItem(this)" data-robux="1700" data-price="₱150">
++                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="img-fluid" alt="1700 Robux bundle" />
++                <h5>1700 Robux</h5>
++                <div class="price-tag">₱150<span>₱999</span></div>
++              </div>
++            </div>
++            <div class="col-md-4">
++              <div class="item-card text-center h-100" onclick="selectItem(this)" data-robux="3500" data-price="₱400">
++                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="img-fluid" alt="3500 Robux bundle" />
++                <h5>3500 Robux</h5>
++                <div class="price-tag">₱400<span>₱1,599</span></div>
++              </div>
++            </div>
++            <div class="col-md-4">
++              <div class="item-card text-center h-100" onclick="selectItem(this)" data-robux="5000" data-price="₱799">
++                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Robux_2019_Logo_Black.svg/960px-Robux_2019_Logo_Black.svg.png" class="img-fluid" alt="5000 Robux bundle" />
++                <h5>5000 Robux</h5>
++                <div class="price-tag">₱799<span>₱1,999</span></div>
++              </div>
++            </div>
++          </div>
++
++          <div class="mt-5">
++            <h5 class="mb-3">Select payment method</h5>
++            <div class="row g-3">
++              <div class="col-6 col-md-3">
++                <div class="payment-method d-flex flex-column gap-3 align-items-center justify-content-center text-center" onclick="selectPayment(this)">
++                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/GCash_primary_logo.svg/512px-GCash_primary_logo.svg.png" alt="GCash logo" />
++                  <span class="text-white-50">GCash</span>
++                </div>
++              </div>
++              <div class="col-6 col-md-3">
++                <div class="payment-method d-flex flex-column gap-3 align-items-center justify-content-center text-center" onclick="selectPayment(this)">
++                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Maya_logo.svg/1024px-Maya_logo.svg.png" alt="Maya logo" />
++                  <span class="text-white-50">Maya</span>
++                </div>
++              </div>
++              <div class="col-6 col-md-3">
++                <div class="payment-method d-flex flex-column gap-3 align-items-center justify-content-center text-center" onclick="selectPayment(this)">
++                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/PayPal.svg/512px-PayPal.svg.png" alt="PayPal logo" />
++                  <span class="text-white-50">PayPal</span>
++                </div>
++              </div>
++              <div class="col-6 col-md-3">
++                <div class="payment-method d-flex flex-column gap-3 align-items-center justify-content-center text-center" onclick="selectPayment(this)">
++                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Bank_Card_icon.svg/240px-Bank_Card_icon.svg.png" alt="Bank transfer" />
++                  <span class="text-white-50">Bank Transfer</span>
++                </div>
++              </div>
++            </div>
++          </div>
++
++          <button class="btn btn-gradient btn-lg mt-4" id="buyButton" onclick="showConfirmationModal()" disabled>Buy now</button>
++        </div>
++      </div>
++    </section>
++
++    <section class="py-5">
++      <div class="container">
++        <div class="row g-4">
++          <div class="col-md-4">
++            <div class="feature-card h-100">
++              <h5>Instant fulfillment</h5>
++              <p>Automated verification and top-up pipelines ensure that your Robux lands in your account in minutes, not hours.</p>
++            </div>
++          </div>
++          <div class="col-md-4">
++            <div class="feature-card h-100">
++              <h5>Legit &amp; transparent</h5>
++              <p>Licensed reseller with verifiable permits, detailed receipts, and clear communication from start to finish.</p>
++            </div>
++          </div>
++          <div class="col-md-4">
++            <div class="feature-card h-100">
++              <h5>Concierge support</h5>
++              <p>Roblox-savvy agents are available through chat, email, and social to help you with every step of the purchase.</p>
++            </div>
++          </div>
++        </div>
++      </div>
++    </section>
++
++    <section id="about" class="py-5">
++      <div class="container">
++        <h2 class="section-title">About Robuxx Secret Shop</h2>
++        <p>Welcome to <strong>Robuxx Secret Shop</strong> — your trusted and affordable Robux supplier in the Philippines. Since day one, our mission has been simple: to provide fast, safe, and secure Robux transactions for Filipino gamers, without the hassle or scams.</p>
++        <p>We know how important your time and money are, so we've built a system that ensures smooth, instant, and legit delivery. Whether you're topping up for the next limited item drop or just boosting your in-game flex, we've got you covered.</p>
++        <p>We accept direct payments via <strong>GCash</strong>, <strong>Maya</strong>, and other major providers. Your order will be processed within minutes after confirmation. Thousands of satisfied customers and growing — all 100% legit, no cap.</p>
++        <div class="row g-4 mt-4">
++          <div class="col-md-6">
++            <div class="feature-card h-100">
++              <h5>Verified credentials</h5>
++              <p class="mb-1"><strong>Business License No:</strong> PH-ROB-0925-LEGIT</p>
++              <p class="mb-1"><strong>Verified GCASH Seller ID:</strong> #113627</p>
++              <p class="mb-1"><strong>DTI Registered:</strong> Robuxx Secret Shop — Sole Proprietorship, 2023</p>
++              <p class="mb-0"><strong>Contact:</strong> support@robuxxsecretshop.ph</p>
++            </div>
++          </div>
++          <div class="col-md-6">
++            <div class="feature-card h-100">
++              <h5>Community first</h5>
++              <p>Our team is composed of passionate Roblox players, tech-savvy agents, and dedicated customer service reps ready to help you 24/7. Join the secret. Buy safe. Flex hard. Only at Robuxx Secret Shop.</p>
++            </div>
++          </div>
++        </div>
++      </div>
++    </section>
++  </main>
++
++  <footer>
++    <div class="container">
++      <p class="mb-1">&copy; <span id="currentYear"></span> Robuxx Secret Shop. All rights reserved.</p>
++      <small>Stay updated with drops and promos on our official Discord and Facebook channels.</small>
++    </div>
++  </footer>
++
++  <div class="modal" tabindex="-1" id="confirmationModal">
++    <div class="modal-dialog">
++      <div class="modal-content">
++        <div class="modal-header">
++          <h5 class="modal-title">Confirm payment</h5>
++          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
++        </div>
++        <div class="modal-body">
++          <h5 class="fw-bold">You are about to purchase <span id="robuxAmount"></span> for <span id="amountPaid"></span>.</h5>
++          <div class="mb-3">
++            <label for="gcashNumber" class="form-label">Enter your GCash number</label>
++            <input type="text" id="gcashNumber" class="form-control" placeholder="09171234567" required />
++          </div>
++        </div>
++        <div class="modal-footer">
++          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
++          <button type="button" class="btn btn-primary" onclick="confirmPurchase()">Confirm purchase</button>
++        </div>
++      </div>
++    </div>
++  </div>
++
++  <div class="mt-4 text-center" id="qrDownloadSection" style="display: none;">
++    <h4>Download Your QR Code</h4>
++    <a href="your-qr-code.png" download="robux-payment-qr.png">
++      <button class="btn btn-primary">Download QR</button>
++    </a>
++  </div>
++
++  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
++  <script>
++    let isUsernameFilled = false;
++    let isItemSelected = false;
++    let isPaymentSelected = false;
++
++    document.getElementById('currentYear').innerText = new Date().getFullYear();
++
++    function toggleSidebar() {
++      document.getElementById('sidebar').classList.toggle('open');
++    }
++
++    document.getElementById('roblox-id').addEventListener('input', function () {
++      isUsernameFilled = this.value.trim() !== '';
++      updateBuyButtonState();
++    });
++
++    function selectItem(card) {
++      document.querySelectorAll('.item-card').forEach(item => item.classList.remove('selected'));
++      card.classList.add('selected');
++      isItemSelected = true;
++      updateBuyButtonState();
++    }
++
++    function selectPayment(payment) {
++      document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
++      payment.classList.add('selected');
++      isPaymentSelected = true;
++      updateBuyButtonState();
++    }
++
++    function updateBuyButtonState() {
++      const buyButton = document.getElementById('buyButton');
++      buyButton.disabled = !(isUsernameFilled && isItemSelected && isPaymentSelected);
++    }
++
++    function showConfirmationModal() {
++      const selectedItem = document.querySelector('.item-card.selected');
++      const robuxAmount = selectedItem ? `${selectedItem.dataset.robux} Robux` : 'Unknown bundle';
++      const price = selectedItem ? selectedItem.dataset.price : '₱0';
++
++      document.getElementById('robuxAmount').innerText = robuxAmount;
++      document.getElementById('amountPaid').innerText = price;
++
++      new bootstrap.Modal(document.getElementById('confirmationModal')).show();
++    }
++
++    function confirmPurchase() {
++      const gcashInput = document.getElementById('gcashNumber').value.trim();
++      const gcashPattern = /^09\d{9}$/;
++
++      if (!gcashPattern.test(gcashInput)) {
++        alert('Please enter a valid 11-digit GCash number starting with 09');
++        return;
++      }
++
++      window.location.href = 'dl.html';
++    }
++  </script>
++</body>
++</html>
+s
